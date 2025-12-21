@@ -9,90 +9,114 @@ output:
 ```{r}
 rm(list = ls())#I am erasing the memory. 
 ```
-# import your data
+# Get the data - import your data - open a file and give it a name,check that the data object was added to the Environment
 
 ```{r}
-linkGit='https://github.com/Fundamentals-Sarah/HW1-Attempt2/raw/refs/heads/main/FSI-2023-DOWNLOAD.xlsx'# open a file and give it a name,check that the data object was added to the Environment
+linkGit='https://github.com/Fundamentals-Sarah/HW1-Attempt2/raw/refs/heads/main/FSI-2023-DOWNLOAD.xlsx'
 ```
-
-## Pull a list of column names from the object fragility23 into one list
+# Install.packages('rio') in order to conduct and publish your analyses, this may need to be readded each session
+```{r}
+library(rio) # package needed
+fragility23=rio::import(file = linkGit) 
+```
+# Exporatory commands - Pull a list of column names from the object fragility23 into one list
 ```{r}
 names(x = fragility23)
 ```
-## You want to see the types of data that are included in the data such as num or characters
+# See the types of data that are included in the data such as num or characters
 ```{r}
 str(object = fragility23)
 ```
+# Show only the first 10 rows, in the order they appear in the object
 ```{r}
-head(x = fragility23,10) #Show only the first 10 rows, in the order they appear in the object
+head(x = fragility23,10)
 ```
+# Show only the last 10 rows, in the order they appear in the object
 ```{r}
-tail(fragility23,10) #Show only the first 10 rows, in the order they appear in the object
+tail(fragility23,10) 
 ```
-
+# Transformative Commands - Limit your data to exclude those columns you wont be working with, using column numbers you want to keep.
 ```{r}
-fragility23[,c(5,11,9)] #Limit your data to exclude those columns you wont be working with, which keeps the data more manageable in R. Include the number for each column you want to keep. 
+fragility23[,c(5,11,9)]  
 ```
+# A better option for limiting columns is to use column names instead of numbers which can be miscounted.
 ```{r}
-fragility23[,c('S1: Demographic Pressures','P1: State Legitimacy','E2: Economic Inequality')] #A better option for limiting columns is to use column names instead of numbers which can be miscounted, example below
+fragility23[,c('S1: Demographic Pressures','P1: State Legitimacy','E2: Economic Inequality')] 
 ```
+# Search the data for certain strings of text, you can even shorten the search of the string like instead of Total use Tot
 ```{r}
-grep(pattern = "Country|S1|P1|E2|Total",x = names(fragility23),fixed = F,value = T) #Search the data for certain strings of text, you can even shorten the search of the string like instead of Total use Tot
+grep(pattern = "Country|S1|P1|E2|Total",x = names(fragility23),fixed = F,value = T) 
 ```
+# Indicate what you are keeping for strings for a data object for transformation and give this object a new name as a subset
 ```{r}
 keep=grep("Country|S1|P1|E2|Total",names(fragility23),fixed = F,value = T)
-frag23_sub=fragility23[,keep] #indicate what you are keeping for strings for a data object for transformation and give this object a new name as a subset
+frag23_sub=fragility23[,keep] 
 ```
+# Transform columns to shorter name
 ```{r}
-names(frag23_sub)[3:5]=c("S1","E2", "P1") ##Transform columns to shorter name
+names(frag23_sub)[3:5]=c("S1","E2", "P1") 
 ```
+# Produce a list of the top ten best countries on the data element Economy from 'frag23_sub'
 ```{r}
 tail(frag23_sub[order(x=-frag23_sub$E2),],10) #option1
-tail(frag23_sub[order(x=-frag23_sub$E2),'Country'],10) #option2 #Produce a list of the top ten best countries on the data element Economy from 'frag23_sub'
+tail(frag23_sub[order(x=-frag23_sub$E2),'Country'],10) #option2 
 ```
+# Some Commutations - Calculate basic summary statistics for the three data elements across all countries
 ```{r}
-summary(object = frag23_sub)#Calculate basic summary statistics for the three data elements across all countries
+summary(object = frag23_sub)
 ```
+# Define the 3rd quartile data object, including to include values with nothing in them
 ```{r}
 q3_Total=quantile(x = frag23_sub$Total, 
                   probs = 0.75, 
-                  na.rm = TRUE) #Define the 3rd quartile data object, including to include values with nothing in them.
+                  na.rm = TRUE) 
 ```
+# Calculate the 3rd quartile value
 ```{r}
-q3_Total #calculate the 3rd quartile value
+q3_Total 
 ```
+# Some Plotting - Calculate the correlations between "S1","E2", and "P1"
 ```{r}
-cor(x=frag23_sub[,-c(1,2)]) #no 'Country', no "Total'#Calculate the correlations between "S1","E2", and "P1"
+cor(x=frag23_sub[,-c(1,2)]) #no 'Country', no "Total'
 ```
+# Install corretable package to find correlations between "S1","E2", "P1" and their "significance", with 1.0 showing Pearsen's coefficient
 ```{r}
 library(corrtable)
-corrtable::correlation_matrix(df = frag23_sub[,-c(1,2)]) #Install corretable package to find correlations between "S1","E2", "P1" and their "significance", with 1.0 showing Pearsen's coefficient
+corrtable::correlation_matrix(df = frag23_sub[,-c(1,2)]) 
 ```
+# Calculate regression to assess potential relationships
 ```{r}
 lm(S1~P1+E2,data=frag23_sub)
 model <- lm(S1 ~ P1 + E2, data = frag23_sub)
-summary(model) #Create a regression plot of State Legitimacy and Economy by Demographic pressures to assess potential relationships
+summary(model) 
 ```
+# Produce a plot in a histogram format
 ```{r}
-hist(x = frag23_sub$P1) #Produce a plot for the State Legitimacy variable in a histogram format
+hist(x = frag23_sub$P1) 
 ```
+
+# Produce the visual correlation in black and white
 ```{r}
-plot(x=frag23_sub$S1, y=frag23_sub$E2) #Produce the visual correlation between Demographic Pressures and Economy in black and white
+plot(x=frag23_sub$S1, y=frag23_sub$E2) 
 ```
+
+# Define parameters for grouping values into buckets of True and False
 ```{r}
 frag23_sub$Total>=q3_Total
-frag23_sub$worstQt=frag23_sub$Total>=q3_Total #Define parameters for grouping values into buckets of True and False
-
+frag23_sub$worstQt=frag23_sub$Total>=q3_Total 
 ```
+
+# Apply color coding to the visual correlation
 ```{r}
 plot(frag23_sub$S1, 
      frag23_sub$E2,pch=20,
-     col = as.factor(frag23_sub$worstQt)) #Applies color coding to the visual correlation to show countries in third quartile
+     col = as.factor(frag23_sub$worstQt)) 
 ```
 
+# Install SJ Plot and create a plot model
 ```{r}
 library(sjPlot)
-plot_models(model) #Install SJ Plot and create a plot model
+plot_models(model)
 ```
 
 
