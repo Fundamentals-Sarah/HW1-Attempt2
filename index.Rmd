@@ -45,12 +45,12 @@ fragility23[,c('S1: Demographic Pressures','P1: State Legitimacy','E2: Economic 
 ```
 
 ```{r}
-grep(pattern = "Country|S1|P1|E2|Total",x = names(fragility23),fixed = F,value = T) #I search the data for certain strings of text
+grep(pattern = "Country|S1|P1|E2|Total",x = names(fragility23),fixed = F,value = T) #I search the data for certain strings or patterns of text
 ```
 
 ```{r}
 keep=grep("Country|S1|P1|E2|Total",names(fragility23),fixed = F,value = T)
-frag23_sub=fragility23[,keep] #I indicate what I am keeping for strings, to transform fragility23 into a subset, or sub-orject, that I will work with
+frag23_sub=fragility23[,keep] #I indicate what I am keeping for strings, to transform fragility23 into a subset, or sub-object, that I will work with
 ```
 
 ```{r}
@@ -61,7 +61,7 @@ names(frag23_sub)[3:5]=c("S1","E2", "P1") #I transform my columns to have shorte
 tail(frag23_sub[order(x=-frag23_sub$E2),],10) #option1 #I produce a table output of the top ten countries for the data element Economy, showing all columns in my sub-object.
 tail(frag23_sub[order(x=-frag23_sub$E2),'Country'],10) #option2 #I produce a list of the top ten country names for the data element Economy.
 ```
-# Some Commutations 
+# Some Computations 
 ```{r}
 summary(object = frag23_sub) #I calculate basic summary statistics for the data elements in my sub object
 ```
