@@ -61,7 +61,7 @@ names(frag23_sub)[3:5]=c("S1","E2", "P1") #I transform my columns to have shorte
 tail(frag23_sub[order(x=-frag23_sub$E2),],10) #option1 #I produce a table output of the top ten countries for the data element Economy, showing all columns in my sub-object.
 tail(frag23_sub[order(x=-frag23_sub$E2),'Country'],10) #option2 #I produce a list of the top ten country names for the data element Economy.
 ```
-# Some Computations 
+# Some Computations
 ```{r}
 summary(object = frag23_sub) #I calculate basic summary statistics for the data elements in my sub object
 ```
