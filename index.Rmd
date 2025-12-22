@@ -9,114 +9,114 @@ output:
 ```{r}
 rm(list = ls())#I am erasing the memory. 
 ```
-# Get the data - import your data - open a file and give it a name,check that the data object was added to the Environment
+# Get the data
 
 ```{r}
-linkGit='https://github.com/Fundamentals-Sarah/HW1-Attempt2/raw/refs/heads/main/FSI-2023-DOWNLOAD.xlsx'
+linkGit='https://github.com/Fundamentals-Sarah/HW1-Attempt2/raw/refs/heads/main/FSI-2023-DOWNLOAD.xlsx' #I am importing my data- I open a file and give it a name
 ```
-# Install.packages('rio') in order to conduct and publish your analyses, this may need to be readded each session
+
 ```{r}
 library(rio) # package needed
-fragility23=rio::import(file = linkGit) 
+fragility23=rio::import(file = linkGit) #I add the rio library package to my session/work
 ```
-# Exporatory commands - Pull a list of column names from the object fragility23 into one list
+# Exploratory commands
 ```{r}
-names(x = fragility23)
+names(x = fragility23) #I pull a list of column names from the object fragility23 into one list
 ```
-# See the types of data that are included in the data such as num or characters
+
 ```{r}
-str(object = fragility23)
+str(object = fragility23) #I want to see the type of data, like numerical and character, for each column
 ```
-# Show only the first 10 rows, in the order they appear in the object
+
 ```{r}
-head(x = fragility23,10)
+head(x = fragility23,10) #I create a table showing only the first 10 rows from the spreadsheet, in the order they appear in the object
 ```
-# Show only the last 10 rows, in the order they appear in the object
+
 ```{r}
-tail(fragility23,10) 
+tail(fragility23,10) #I create a table showing only the last 10 rows in the spreadsheet, in the order they appear in the object
 ```
-# Transformative Commands - Limit your data to exclude those columns you wont be working with, using column numbers you want to keep.
+# Transformative Commands
 ```{r}
-fragility23[,c(5,11,9)]  
+fragility23[,c(5,11,9)]  #I limit my data to exclude those columns I wont be working with, by including in this code the numbers of the columns I want to work with.
 ```
-# A better option for limiting columns is to use column names instead of numbers which can be miscounted.
+
 ```{r}
-fragility23[,c('S1: Demographic Pressures','P1: State Legitimacy','E2: Economic Inequality')] 
+fragility23[,c('S1: Demographic Pressures','P1: State Legitimacy','E2: Economic Inequality')] #I limit columns by using column names instead of numbers here. This is a better approach which avoids the risk of miscounting that is introduced by the prior code.
 ```
-# Search the data for certain strings of text, you can even shorten the search of the string like instead of Total use Tot
+
 ```{r}
-grep(pattern = "Country|S1|P1|E2|Total",x = names(fragility23),fixed = F,value = T) 
+grep(pattern = "Country|S1|P1|E2|Total",x = names(fragility23),fixed = F,value = T) #I search the data for certain strings of text
 ```
-# Indicate what you are keeping for strings for a data object for transformation and give this object a new name as a subset
+
 ```{r}
 keep=grep("Country|S1|P1|E2|Total",names(fragility23),fixed = F,value = T)
-frag23_sub=fragility23[,keep] 
+frag23_sub=fragility23[,keep] #I indicate what I am keeping for strings, to transform fragility23 into a subset, or sub-orject, that I will work with
 ```
-# Transform columns to shorter name
+
 ```{r}
-names(frag23_sub)[3:5]=c("S1","E2", "P1") 
+names(frag23_sub)[3:5]=c("S1","E2", "P1") #I transform my columns to have shorter names
 ```
-# Produce a list of the top ten best countries on the data element Economy from 'frag23_sub'
+
 ```{r}
-tail(frag23_sub[order(x=-frag23_sub$E2),],10) #option1
-tail(frag23_sub[order(x=-frag23_sub$E2),'Country'],10) #option2 
+tail(frag23_sub[order(x=-frag23_sub$E2),],10) #option1 #I produce a table output of the top ten countries for the data element Economy, showing all columns in my sub-object.
+tail(frag23_sub[order(x=-frag23_sub$E2),'Country'],10) #option2 #I produce a list of the top ten country names for the data element Economy.
 ```
-# Some Commutations - Calculate basic summary statistics for the three data elements across all countries
+# Some Commutations 
 ```{r}
-summary(object = frag23_sub)
+summary(object = frag23_sub) #I calculate basic summary statistics for the data elements in my sub object
 ```
-# Define the 3rd quartile data object, including to include values with nothing in them
+
 ```{r}
 q3_Total=quantile(x = frag23_sub$Total, 
                   probs = 0.75, 
-                  na.rm = TRUE) 
+                  na.rm = TRUE) #I define the 3rd quartile data object, using na.rm to tell the code to include empty values
 ```
-# Calculate the 3rd quartile value
+
 ```{r}
-q3_Total 
+q3_Total #I calculate the 3rd quartile value
 ```
-# Some Plotting - Calculate the correlations between "S1","E2", and "P1"
+
 ```{r}
-cor(x=frag23_sub[,-c(1,2)]) #no 'Country', no "Total'
+cor(x=frag23_sub[,-c(1,2)]) #no 'Country', no "Total'#I calculate the correlations between "S1","E2", and "P1"
 ```
-# Install corretable package to find correlations between "S1","E2", "P1" and their "significance", with 1.0 showing Pearsen's coefficient
+
 ```{r}
-library(corrtable)
-corrtable::correlation_matrix(df = frag23_sub[,-c(1,2)]) 
+library(corrtable) #I install corrtable package
+corrtable::correlation_matrix(df = frag23_sub[,-c(1,2)]) #I run the correlation matrix to find correlations between the data elements in my subobject
 ```
-# Calculate regression to assess potential relationships
+ 
 ```{r}
 lm(S1~P1+E2,data=frag23_sub)
 model <- lm(S1 ~ P1 + E2, data = frag23_sub)
-summary(model) 
+summary(model) #I calculate regression to assess potential relationships
 ```
-# Produce a plot in a histogram format
+# Some Plotting
 ```{r}
-hist(x = frag23_sub$P1) 
+hist(x = frag23_sub$P1) #I produce a plot in a histogram format
 ```
 
-# Produce the visual correlation in black and white
+
 ```{r}
-plot(x=frag23_sub$S1, y=frag23_sub$E2) 
+plot(x=frag23_sub$S1, y=frag23_sub$E2) #I produce the visual correlation in black and white
 ```
 
-# Define parameters for grouping values into buckets of True and False
+
 ```{r}
 frag23_sub$Total>=q3_Total
-frag23_sub$worstQt=frag23_sub$Total>=q3_Total 
+frag23_sub$worstQt=frag23_sub$Total>=q3_Total #I define parameters for grouping values into buckets of True and False
 ```
 
-# Apply color coding to the visual correlation
+
 ```{r}
 plot(frag23_sub$S1, 
      frag23_sub$E2,pch=20,
-     col = as.factor(frag23_sub$worstQt)) 
+     col = as.factor(frag23_sub$worstQt)) #I apply color coding to the visual correlation
 ```
 
-# Install SJ Plot and create a plot model
+
 ```{r}
-library(sjPlot)
-plot_models(model)
+library(sjPlot) #I install SJ Plot
+plot_models(model) #I create a plot model
 ```
 
 
