@@ -5,6 +5,7 @@ output:
     df_print: paged
 ---
 
+
 # Start fresh
 ```{r}
 rm(list = ls())#I am erasing the memory. 
